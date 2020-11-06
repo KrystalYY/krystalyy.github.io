@@ -14,6 +14,29 @@ A socket is a unique pair of (client host, client port, server host, server port
 #### workflow
 A server would create a special socket that binds with its host and port (no client host and port) and listens for connections. (`bind()` -> `listen()`). When a request comes, it accpets it (`accept()`), and creates a new socket (with all 5 identifiers) to represent this connection. The listening socket is not affected and continues to listen to new request.(https://man7.org/linux/man-pages/man2/accept.2.html)
 
+#### state transfer
+https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/constatus.html
+
+| **Client**|             | **Server**|    |
+|----------|--------------|----------|-|
+| Closed   |              | LISTEN   ||
+|          | --SYN-->     |          |Client application actively opens a connection|
+| SYN_SENT |              |          ||
+|          | <--SYN,ACK-- |          ||
+|          |              | SYN_RCVD ||
+|          |--ACK-->      |          ||
+|ESTABLISHED|              |ESTABLISHED||
+|          |              |          ||
+|          |--FIN-->      |          |Client application actively closes a connection|
+|FIN_WAIT_1|              |          ||
+|          |<--ACK--      |          ||
+|FIN_WAIT_2|              |CLOSE_WAIT|Socket on server waits for termination request from the server application|
+|          |<--FIN--      |          |After socket receives termination request from the server application|
+|          |              |LAST_ACK||
+|          |--ACK-->      |          ||
+|TIME_WAIT |              |CLOSED    |Client wait for some time to make sure server side receives the ACK|
+|CLOSED    |              |          ||
+
 #### socket types (2 mostly used):
 * stream socket: use TCP, guaranteed and ordered delivery
 * datagram socket: use UDP, not guaranteed
