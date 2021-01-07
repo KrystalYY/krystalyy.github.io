@@ -13,4 +13,7 @@ Poor performance.
 ##  Protocol Buffers
 
 https://developers.google.com/protocol-buffers/docs/pythontutorial
+
 More efficient for communication and storage, supports RPC (procedure call).
+
+`.proto` file => compile => data access classes, and corresponding accessor functions like `name()` and `set_name()`, as well as methods to serialize/parse the whole structure to/from raw bytes.
